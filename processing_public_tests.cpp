@@ -130,6 +130,7 @@ void test_energy(const Matrix *energy_mat, string prefix){
   Matrix* energy_mat_correct = new Matrix;
   load_matrix(energy_mat_correct, prefix + "_energy_correct.txt");
 
+
   assert(Matrix_equal(energy_mat, energy_mat_correct));
   cout << "PASS" << endl;
 
@@ -172,6 +173,8 @@ void test_remove_seam(const Image* img, const int seam[],
 
   Image* removed_img_correct = new Image;
   load_image(removed_img_correct, prefix + "_removed.correct.ppm");
+  //Image_print(removed_img, std::cout);
+  //Image_print(removed_img_correct, std::cout);
 
   assert(Image_equal(removed_img, removed_img_correct));
   cout << "PASS" << endl;
@@ -194,7 +197,6 @@ void test_seam_carve(const Image *img, string prefix,
   load_image(carved_img_correct,
     prefix + "_" + to_string(new_width) +
     "x" + to_string(new_height) + ".correct.ppm");
-
   assert(Image_equal(carved_img, carved_img_correct));
   cout << "PASS" << endl;
 

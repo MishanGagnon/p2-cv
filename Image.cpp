@@ -8,7 +8,20 @@
 // EFFECTS:  Initializes the Image with the given width and height.
 // NOTE:     Do NOT use new or delete here.
 void Image_init(Image* img, int width, int height) {
-  assert(false); // TODO Replace with your implementation!
+  (*img).width = width;
+  (*img).height = height;
+
+  Matrix_init(&img->red_channel, width, height);
+  Matrix_fill(&img->red_channel, 0);
+  img->red_channel = img->red_channel;
+
+  Matrix_init(&img->green_channel, width, height);
+  Matrix_fill(&img->green_channel, 0);
+  img->green_channel = img->green_channel;
+
+  Matrix_init(&img->blue_channel, width, height);
+  Matrix_fill(&img->blue_channel, 0);
+  img->blue_channel = img->blue_channel;
 }
 
 // REQUIRES: img points to an Image
@@ -20,7 +33,28 @@ void Image_init(Image* img, int width, int height) {
 // NOTE:     See the project spec for a discussion of PPM format.
 // NOTE:     Do NOT use new or delete here.
 void Image_init(Image* img, std::istream& is) {
-  assert(false); // TODO Replace with your implementation!
+  std::string p3;
+  int burn = 0;
+  int r = 0;
+  int g = 0;
+  int b = 0;
+  is >> p3 >> (*img).width >> (*img).height >> burn;
+  std::cout << Image_height(img) <<  " Test " << Image_width(img) << std::endl;
+  for (int i = 0; i < Image_height(img); i++)
+  {
+    for (int j = 0; j < Image_width(img); j++)
+    {
+
+      is >> r >> g >> b;
+      *Matrix_at(&img->red_channel, i, j) = r;
+      *Matrix_at(&img->green_channel, i, j) = g;
+      *Matrix_at(&img->blue_channel, i, j) = b;
+
+    }
+    
+  }
+
+  
 }
 
 // REQUIRES: img points to a valid Image
@@ -37,19 +71,33 @@ void Image_init(Image* img, std::istream& is) {
 //           "extra" space at the end of each line. See the project spec
 //           for an example.
 void Image_print(const Image* img, std::ostream& os) {
-  assert(false); // TODO Replace with your implementation!
+  os << "P3" << std::endl;
+  os << (*img).width << " " << (*img).height << std::endl;
+  os << "255" << std::endl;
+
+  for (int i = 0; i < Image_height(img); i++)
+  {
+    for (int j = 0; j < Image_width(img); j++)
+    {
+      os << *Matrix_at(&img->red_channel, i, j) << " ";
+      os << *Matrix_at(&img->green_channel, i, j) << " ";
+      os << *Matrix_at(&img->blue_channel, i, j) << " ";
+    }
+    os << std::endl;
+  }
+  
 }
 
 // REQUIRES: img points to a valid Image
 // EFFECTS:  Returns the width of the Image.
 int Image_width(const Image* img) {
-  assert(false); // TODO Replace with your implementation!
+  return (*img).width;
 }
 
 // REQUIRES: img points to a valid Image
 // EFFECTS:  Returns the height of the Image.
 int Image_height(const Image* img) {
-  assert(false); // TODO Replace with your implementation!
+  return (*img).height;
 }
 
 // REQUIRES: img points to a valid Image
@@ -57,7 +105,11 @@ int Image_height(const Image* img) {
 //           0 <= column && column < Image_width(img)
 // EFFECTS:  Returns the pixel in the Image at the given row and column.
 Pixel Image_get_pixel(const Image* img, int row, int column) {
-  assert(false); // TODO Replace with your implementation!
+  Pixel* pixel = new Pixel;
+  pixel->r = *Matrix_at(&img->red_channel, row, column);
+  pixel->g = *Matrix_at(&img->green_channel, row, column);
+  pixel->b = *Matrix_at(&img->blue_channel, row, column);
+  return (*pixel);
 }
 
 // REQUIRES: img points to a valid Image
@@ -67,12 +119,16 @@ Pixel Image_get_pixel(const Image* img, int row, int column) {
 // EFFECTS:  Sets the pixel in the Image at the given row and column
 //           to the given color.
 void Image_set_pixel(Image* img, int row, int column, Pixel color) {
-  assert(false); // TODO Replace with your implementation!
+  *Matrix_at(&img->red_channel, row, column) = color.r;
+  *Matrix_at(&img->green_channel, row, column) = color.g;
+  *Matrix_at(&img->blue_channel, row, column) = color.b;
 }
 
 // REQUIRES: img points to a valid Image
 // MODIFIES: *img
 // EFFECTS:  Sets each pixel in the image to the given color.
 void Image_fill(Image* img, Pixel color) {
-  assert(false); // TODO Replace with your implementation!
+  Matrix_fill(&img->red_channel, color.r);
+  Matrix_fill(&img->green_channel, color.g);
+  Matrix_fill(&img->blue_channel, color.b);
 }
